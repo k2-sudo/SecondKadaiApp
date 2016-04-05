@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet var label1: UILabel!
     
@@ -21,13 +21,48 @@ class ViewController: UIViewController {
     
     // 他の画面から segue を使って戻ってきた時に呼ばれるように指定した関数
     @IBAction func unwind(segue: UIStoryboardSegue) {
+        //initialize
+        text1.text = ""
+        errorlabel.text = ""
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        text1.delegate = self
+        
     }
 
+    
+    // Check the num of characters
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+    
+    let maxLength: Int = 20
+    
+    let c: Int
+    
+    if let text = textField.text {
+        let str = text + string
+        print("str = " + str)
+        c = str.utf16.count
+    }
+    else {
+        
+        print("02")
+        c = string.utf16.count
+    }
+        
+    // 文字数がmaxLength以下ならtrueを返す.
+    if c < maxLength {
+        print("ok")
+        return true
+    }else{
+        print("error")
+        errorlabel.text = "名前は２０文字以内で入力してください。"
+        return false
+        }
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -45,6 +80,8 @@ class ViewController: UIViewController {
         
     }
 
+    
+    //Check Space
     override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
         
         if self.text1.text == ""{
@@ -57,6 +94,8 @@ class ViewController: UIViewController {
         
         
     }
+    
+    
 
 
 
